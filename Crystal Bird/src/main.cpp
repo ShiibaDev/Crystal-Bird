@@ -16,8 +16,11 @@ const int warning = 11;
 const int danger = 12;
 
 // Definitions of input
-String ssid;
-String pass;
+String ssid = "";
+String pass = "";
+
+// Reset Switch
+String RT = "";
 
 // Security purposes, this is a test function
 
@@ -31,6 +34,42 @@ void Init() {
     Serial.print("Connection SSID: ");
     ssid = Serial.readString();
     pass = Serial.readString();
+    Serial.println();
+  } else {
+    Serial.print("Installation canceled, please, to restart, give input value RT");
+    RT = Serial.readString();
+  }
+  // Check the input of RT
+  if (RT == "RT") {
+    Serial.println("Retrying installation procedure");
+    Init();
+    return;
+  } else {
+    const int INITIAL_DELAY_TIME = 5000;
+    int RetriesCount = 0;
+    int delaytime = INITIAL_DELAY_TIME;
+
+    while (RT != "RT")
+    {
+      Serial.print("Retrying in... ");
+      Serial.print(delaytime);
+      delay(delaytime); delaytime *= 2;
+
+      if (delaytime >= 30000) {
+        delaytime = 30000;
+      }
+      RetriesCount++;
+
+      if (Serial.available() > 0) {
+        RT = Serial.readString();
+      }
+    }
+
+    if (RT == "RT") {
+      Serial.println("Installation on process, retrying protocol has been started.");
+      Init();
+      return;
+    }
   }
 }
 
