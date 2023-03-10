@@ -1,11 +1,23 @@
+// Some code fragments have been taken from an old repository: https://github.com/ShiibaDev/Fair-Sciencie/blob/master/src/main.cpp
+
+/* 
+ShibaDvelopment(UwU);
+*/
+
 #include <Arduino.h>
 // WiFi Libraries
 #include <SPI.h>
 #include <WiFi101.h>
+
+using namespace std;
 // Definition of every value on the board (Leds, Analogs, etc)
 const int safe = 10;
 const int warning = 11;
 const int danger = 12;
+
+// Definitions of input
+String ssid;
+String pass;
 
 // Security purposes, this is a test function
 
@@ -17,12 +29,34 @@ void Init() {
   char wifiConQ = Serial.read();
   if (wifiConQ == 'Y') {
     Serial.print("Connection SSID: ");
-    std:String ssid = Serial.readString();
+    ssid = Serial.readString();
+    pass = Serial.readString();
   }
 }
 
 // Connect to the Wifi and check it.
 void Connection() {
+  pinMode(safe, OUTPUT);
+  pinMode(warning, OUTPUT);
+  pinMode(danger, OUTPUT);
+
+  for (int j = 0; j < 10; j++) {
+    Serial.print("Initialization "); delay(1000); Serial.print("."); delay(1000); Serial.print("."); delay(1000); Serial.print(".");
+    digitalWrite(warning, HIGH);
+    digitalWrite(danger, HIGH);
+
+    Serial.print(ssid);
+    Serial.print(" <== Connection name");
+    WiFi.begin(ssid, pass);
+
+    if (WiFi.status() == WL_CONNECTED) {
+      break;
+      digitalWrite(warning, LOW);
+      digitalWrite(danger, LOW);
+    }
+  }
+
+  // Investigation on process.
   if (WiFi.status() == WL_CONNECTED) {
     pinMode(safe, OUTPUT);
 
