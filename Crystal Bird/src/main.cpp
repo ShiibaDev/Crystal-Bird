@@ -1,4 +1,5 @@
 // Some code fragments have been taken from an old repository: https://github.com/ShiibaDev/Fair-Sciencie/blob/master/src/main.cpp
+// They are being optimized and configured for a complex operation.
 
 /* 
 ShibaDvelopment(UwU);
