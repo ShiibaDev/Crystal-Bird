@@ -75,8 +75,8 @@ void Init() {
   }
 }
 
-// Check WiFi connection, then connect it.
-// Using the function of above, we get the connection information. (SSID and PASSWORD.)
+// Check if the WiFi exist or no, if it exist, then connect.
+// Using the function Init(), we get the connection information. (SSID and PASSWORD.)
 // Those are being stored in the board.
 void Connection() {
   pinMode(safe, OUTPUT);
