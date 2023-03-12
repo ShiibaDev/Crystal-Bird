@@ -27,6 +27,22 @@ String RT = "";
 
 // Functions (Every function made, is below this.)
 // Connect to the WiFi ;)
+void Restart() {
+  // A fatal error occurred and we don't want to destroy the house with a explosion, so we get out of control, turning every 1 into 0, like a general shutdown.
+  pinMode(danger, OUTPUT);
+
+  bool err; err = true;
+
+  while(err = true) {
+    digitalWrite(danger, HIGH);
+    delay(755);
+    digitalWrite(danger, LOW);
+  }
+
+  // Below here, program the board to get out of the connection.
+  
+}
+
 void Init() {
   // put your setup code here, to run once:
   Serial.println("Crystal Bird Initialization");
@@ -120,9 +136,16 @@ void Connection() {
 }
 
 void setup() {
+  // Code to run once
   Init();
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("Already connected");
+  } else {
+    Connection();
+  }
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  // If the connection name is not working, initialize the function to restart.
 }
