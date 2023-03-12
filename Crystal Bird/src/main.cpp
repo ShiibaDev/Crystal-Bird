@@ -26,6 +26,7 @@ String RT = "";
 // Security purposes, this is a test function
 
 // Functions (Every function made, is below this.)
+// Connect to the WiFi ;)
 void Init() {
   // put your setup code here, to run once:
   Serial.println("Crystal Bird Initialization");
@@ -74,7 +75,9 @@ void Init() {
   }
 }
 
-// Connect to the Wifi and check it.
+// Check WiFi connection, then connect it.
+// Using the function of above, we get the connection information. (SSID and PASSWORD.)
+// Those are being stored in the board.
 void Connection() {
   pinMode(safe, OUTPUT);
   pinMode(warning, OUTPUT);
@@ -117,7 +120,7 @@ void Connection() {
 }
 
 void setup() {
-
+  Init();
 }
 
 void loop() {
