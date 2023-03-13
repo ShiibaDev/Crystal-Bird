@@ -2,9 +2,8 @@
 // They are being optimized and configured for a complex operation.
 
 /* 
-ShibaDvelopment(UwU);
+Credits something: ShibaDevelopment(UwU);
 */
-
 #include <Arduino.h>
 // WiFi Libraries
 #include <SPI.h>
@@ -17,11 +16,26 @@ const int warning = 11;
 const int danger = 12;
 
 // Definitions of input
-String ssid = "";
-String pass = "";
+static char ssid[256] = "";
+static char pass[256] = "";
 
 // Reset Switch
-String RT = "";
+static char RT[3] = "RT";
+
+void setup() {
+  // put your setup code here, to run once:
+  Init();
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("Already connected");
+  } else {
+    Connection();
+  }
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  // If the connection name is not working, initialize the function to restart.
+}
 
 // Security purposes, this is a test function
 
@@ -33,29 +47,34 @@ void Restart() {
 
   bool err; err = true;
 
-  while(err = true) {
+  while(err == true) {
     digitalWrite(danger, HIGH);
     delay(755);
     digitalWrite(danger, LOW);
   }
 
   // Below here, program the board to get out of the connection.
-  
+
 }
 
 void Init() {
-  // put your setup code here, to run once:
+  Serial.begin(9600);
   Serial.println("Crystal Bird Initialization");
   Serial.print("Connect to wifi? [Y]es [N]o");
   char wifiConQ = Serial.read();
   if (wifiConQ == 'Y') {
     Serial.print("Connection SSID: ");
-    ssid = Serial.readString();
-    pass = Serial.readString();
-    Serial.println();
+    if (!Serial.available()) { NULL; return;}
+    delay(10000);
   } else {
     Serial.print("Installation canceled, please, to restart, give input value RT");
-    RT = Serial.readString();
+    while(Serial.available() > 0) {
+      if(Serial.read()=='\n') {
+        continue;
+      } else {
+        Init(); return;
+      }
+    }
   }
   // Check the input of RT
   if (RT == "RT") {
@@ -63,31 +82,7 @@ void Init() {
     Init();
     return;
   } else {
-    const int INITIAL_DELAY_TIME = 5000;
-    int RetriesCount = 0;
-    int delaytime = INITIAL_DELAY_TIME;
 
-    while (RT != "RT")
-    {
-      Serial.print("Retrying in... ");
-      Serial.print(delaytime);
-      delay(delaytime); delaytime *= 2;
-
-      if (delaytime >= 30000) {
-        delaytime = 30000;
-      }
-      RetriesCount++;
-
-      if (Serial.available() > 0) {
-        RT = Serial.readString();
-      }
-    }
-
-    if (RT == "RT") {
-      Serial.println("Installation on process, retrying protocol has been started.");
-      Init();
-      return;
-    }
   }
 }
 
@@ -133,19 +128,4 @@ void Connection() {
       digitalWrite(warning, LOW);
     }
   }
-}
-
-void setup() {
-  // Code to run once
-  Init();
-  if (WiFi.status() == WL_CONNECTED) {
-    Serial.println("Already connected");
-  } else {
-    Connection();
-  }
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-  // If the connection name is not working, initialize the function to restart.
 }
