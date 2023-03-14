@@ -36,9 +36,21 @@ void Restart() {
 }
 
 void Init() {
-  Serial.begin(9600);
+  String ans;
+
   Serial.println("Crystal Bird Initialization");
   Serial.print("Connect to wifi? [Y]es [N]o");
+  while (!Serial.available());
+  ans = Serial.readString();
+  if (ans == "Y") {
+    Serial.println("Good, starting the setup of the board");
+    Serial.print("Enter SSID: ");
+    while (!Serial.available());
+    ssid = Serial.readString();
+    Serial.print("Enter pass: ");
+    while (!Serial.available());
+    pass = Serial.readString();
+  }
 }
 
 // Check if the WiFi exist or no, if it exist, then connect.
@@ -87,10 +99,12 @@ void Connection() {
 }
 
 void setup() {
+  Serial.begin(9600);
   Init();
   if (ssid == "" && pass == "") {
     Serial.println("No SSID and Pass gave");
   } else {
+    Serial.println("Starting. . .\n");
     Connection();
   }
 }
