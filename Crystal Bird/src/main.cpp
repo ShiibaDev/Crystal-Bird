@@ -35,24 +35,6 @@ void Restart() {
   
 }
 
-void Init() {
-  String ans;
-
-  Serial.println("Crystal Bird Initialization");
-  Serial.print("Connect to wifi? [Y]es [N]o");
-  while (!Serial.available());
-  ans = Serial.readString();
-  if (ans == "Y") {
-    Serial.println("Good, starting the setup of the board");
-    Serial.print("Enter SSID: ");
-    while (!Serial.available());
-    ssid = Serial.readString();
-    Serial.print("Enter pass: ");
-    while (!Serial.available());
-    pass = Serial.readString();
-  }
-}
-
 // Check if the WiFi exist or no, if it exist, then connect.
 // Using the function Init(), we get the connection information. (SSID and PASSWORD.)
 // Those are being stored in the board.
@@ -60,6 +42,11 @@ void Connection() {
   pinMode(safe, OUTPUT);
   pinMode(warning, OUTPUT);
   pinMode(danger, OUTPUT);
+
+  if (ssid == "" && pass == "") {
+    Serial.println("No info gave");
+    return setup();
+  }
 
   for (int j = 0; j < 10; j++) {
     Serial.print("Initialization "); delay(2000); Serial.print("."); delay(2000); Serial.print("."); delay(2000); Serial.print(".");
@@ -99,14 +86,7 @@ void Connection() {
 }
 
 void setup() {
-  Serial.begin(9600);
-  Init();
-  if (ssid == "" && pass == "") {
-    Serial.println("No SSID and Pass gave");
-  } else {
-    Serial.println("Starting. . .\n");
-    Connection();
-  }
+  // Stand by
 }
 
 void loop() {
