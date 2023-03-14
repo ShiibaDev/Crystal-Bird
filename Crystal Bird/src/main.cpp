@@ -1,6 +1,8 @@
 // Some code fragments have been taken from an old repository: https://github.com/ShiibaDev/Fair-Sciencie/blob/master/src/main.cpp
 // They are being optimized and configured for a complex operation.
 
+// Este codigo esta en ingles, para que personas de todo el mundo puedan utilizarlo y configurarlo a su favor.
+
 /* 
 Credits something: ShibaDevelopment(UwU);
 */
@@ -8,38 +10,20 @@ Credits something: ShibaDevelopment(UwU);
 // WiFi Libraries
 #include <SPI.h>
 #include <WiFi101.h>
-
-using namespace std;
 // Definition of every value on the board (Leds, Analogs, etc)
 const int safe = 10;
 const int warning = 11;
 const int danger = 12;
 
 // Definitions of input
-static char ssid[256] = "";
-static char pass[256] = "";
+String ssid = "";
+String pass = "";
 
 // Reset Switch
-static char RT[3] = "RT";
-
-void setup() {
-  // put your setup code here, to run once:
-  Init();
-  if (WiFi.status() == WL_CONNECTED) {
-    Serial.println("Already connected");
-  } else {
-    Connection();
-  }
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-  // If the connection name is not working, initialize the function to restart.
-}
-
-// Security purposes, this is a test function
+String RT = "";
 
 // Functions (Every function made, is below this.)
+
 // Connect to the WiFi ;)
 void Restart() {
   // A fatal error occurred and we don't want to destroy the house with a explosion, so we get out of control, turning every 1 into 0, like a general shutdown.
@@ -52,37 +36,40 @@ void Restart() {
     delay(755);
     digitalWrite(danger, LOW);
   }
-
   // Below here, program the board to get out of the connection.
-
+  
 }
 
 void Init() {
   Serial.begin(9600);
   Serial.println("Crystal Bird Initialization");
   Serial.print("Connect to wifi? [Y]es [N]o");
-  char wifiConQ = Serial.read();
-  if (wifiConQ == 'Y') {
+  String wifiConQ;
+  while (Serial.available() > 0) {
+    wifiConQ = Serial.readString();
+  }
+  if (wifiConQ == "Y") {
     Serial.print("Connection SSID: ");
-    if (!Serial.available()) { NULL; return;}
-    delay(10000);
-  } else {
-    Serial.print("Installation canceled, please, to restart, give input value RT");
-    while(Serial.available() > 0) {
-      if(Serial.read()=='\n') {
-        continue;
-      } else {
-        Init(); return;
-      }
+    while (Serial.available() > 0) {
+      ssid = Serial.readString();
     }
+    Serial.println();
+    Serial.print("Connection PASS: ");
+    while (Serial.available() > 0) {
+      pass = Serial.readString();
+    }
+    Serial.println();
+  } else if (wifiConQ == "N") {
+    Serial.println("Installation canceled, please, to restart.\n\n Give input value RT");
+  } else {
+    Serial.println("Invalid input, returning. . .");
+    Init(); return;
   }
   // Check the input of RT
   if (RT == "RT") {
     Serial.println("Retrying installation procedure");
     Init();
     return;
-  } else {
-
   }
 }
 
@@ -99,6 +86,7 @@ void Connection() {
     digitalWrite(warning, HIGH);
     digitalWrite(danger, HIGH);
 
+    // Connect, using `WiFi.begin();`
     Serial.print(ssid);
     Serial.print(" <== Connection name");
     WiFi.begin(ssid, pass);
@@ -128,4 +116,23 @@ void Connection() {
       digitalWrite(warning, LOW);
     }
   }
+}
+
+void setup()
+{
+  // put your setup code here, to run once:
+  Init();
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    Serial.println("Already connected");
+  }
+  else
+  {
+    Connection();
+  }
+}
+
+void loop()
+{
+  // put your main code here, to run repeatedly:
 }
