@@ -62,7 +62,7 @@ void Connection() {
   pinMode(danger, OUTPUT);
 
   for (int j = 0; j < 10; j++) {
-    Serial.print("Initialization "); delay(1000); Serial.print("."); delay(1000); Serial.print("."); delay(1000); Serial.print(".");
+    Serial.print("Initialization "); delay(2000); Serial.print("."); delay(2000); Serial.print("."); delay(2000); Serial.print(".");
     digitalWrite(warning, HIGH);
     digitalWrite(danger, HIGH);
 
