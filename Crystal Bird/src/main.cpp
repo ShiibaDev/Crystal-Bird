@@ -2,6 +2,7 @@
 // They are being optimized and configured for a complex operation.
 
 // Warning, code are corrupted.
+#include "thingProperties.h"
 #include <Arduino.h>
 // WiFi Libraries
 #include <SPI.h>
@@ -10,13 +11,7 @@
 const int safe = 10;
 const int warning = 11;
 const int danger = 12;
-
-// Definitions of input
-String ssid = "";
-String pass = "";
-
-// Reset Switch
-String RT = "";
+const int LightOn = LED_BUILTIN;
 // Functions (Every function made, is below this.)
 
 // Connect to the WiFi ;)
@@ -32,7 +27,6 @@ void Restart() {
     digitalWrite(danger, LOW);
   }
   // Below here, program the board to get out of the connection.
-  
 }
 
 // Check if the WiFi exist or no, if it exist, then connect.
@@ -42,55 +36,35 @@ void Connection() {
   pinMode(safe, OUTPUT);
   pinMode(warning, OUTPUT);
   pinMode(danger, OUTPUT);
-
-  if (ssid == "" && pass == "") {
-    Serial.println("No info gave");
-    return setup();
-  }
-
-  for (int j = 0; j < 10; j++) {
-    Serial.print("Initialization "); delay(2000); Serial.print("."); delay(2000); Serial.print("."); delay(2000); Serial.print(".");
-    digitalWrite(warning, HIGH);
-    digitalWrite(danger, HIGH);
-
-    // Connect, using `WiFi.begin();`
-    Serial.print(ssid);
-    Serial.print(" <== Connection name");
-    WiFi.begin(ssid, pass);
-
-    if (WiFi.status() == WL_CONNECTED) {
-      break;
-      digitalWrite(warning, LOW);
-      digitalWrite(danger, LOW);
-    }
-  }
-
-  // Investigation on process.
-  if (WiFi.status() == WL_CONNECTED) {
-    pinMode(safe, OUTPUT);
-
-    for (int i = 0; i < 10; i++) {
-      digitalWrite(safe, LOW);
-      delay(850);
-      digitalWrite(safe, HIGH);
-    }
-  } else {
-    pinMode(warning, OUTPUT);
-
-    digitalWrite(warning, HIGH);
-    // If error fixed, turn the warning led off.
-    if (WiFi.status() == WL_CONNECTED) {
-      digitalWrite(warning, LOW);
-    }
-  }
 }
 
 void setup() {
-  // Stand by
+  Serial.begin(9600);
+  delay(1250);
+  initProperties();
+  
+  // Connect to Arduino IoT Cloud
+  ArduinoCloud.begin(ArduinoIoTPreferredConnection);
+    /*
+     The following function allows you to obtain more information
+     related to the state of network and IoT Cloud connection and errors
+     the higher number the more granular information you’ll get.
+     The default is 0 (only errors).
+     Maximum is 4
+ */
+  setDebugMessageLevel(2);
+  ArduinoCloud.printDebugInfo();
+  pinMode(LightOn, led);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  ArduinoCloud.update();
+}
+
+void onLedChange() {
+  Serial.print("Led status changed:");
+  Serial.println(led);
 }
 
 // Este codigo esta en ingles, para que personas de todo el mundo puedan utilizarlo y configurarlo a su favor.
