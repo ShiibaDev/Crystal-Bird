@@ -11,7 +11,7 @@
 const int safe = 10;
 const int warning = 11;
 const int danger = 12;
-const int LightOn = LED_BUILTIN;
+const int LightOn = 13;
 // Functions (Every function made, is below this.)
 
 // Connect to the WiFi ;)
@@ -42,16 +42,17 @@ void setup() {
   Serial.begin(9600);
   delay(1250);
   initProperties();
-  
+
   // Connect to Arduino IoT Cloud
   ArduinoCloud.begin(ArduinoIoTPreferredConnection);
-    /*
-     The following function allows you to obtain more information
-     related to the state of network and IoT Cloud connection and errors
-     the higher number the more granular information you’ll get.
-     The default is 0 (only errors).
-     Maximum is 4
- */
+
+  /*
+ The following function allows you to obtain more information
+ related to the state of network and IoT Cloud connection and errors
+ the higher number the more granular information you’ll get.
+ The default is 0 (only errors).
+ Maximum is 4
+*/
   setDebugMessageLevel(2);
   ArduinoCloud.printDebugInfo();
   pinMode(LightOn, led);
