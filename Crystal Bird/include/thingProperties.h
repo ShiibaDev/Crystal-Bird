@@ -7,14 +7,16 @@
 const char ssid[] = SECRET_SSID;    // Network SSID (name)
 const char pass[] = SECRET_OPTIONAL_PASS;    // Network password (use for WPA, or use as key for WEP)
 
-void onLedChange();
+void Initialize();
 
 bool led;
+bool LightSource;
 bool err;
 
 void initProperties(){
-   ArduinoCloud.addProperty(led, READWRITE, ON_CHANGE, onLedChange);
+   ArduinoCloud.addProperty(led, READWRITE, ON_CHANGE, Initialize);
    ArduinoCloud.addProperty(led, READ, ON_CHANGE, Restart);
+   ArduinoCloud.addProperty(err, READ, ON_CHANGE, lightTurnOnOff);
 }
 
 WiFiConnectionHandler ArduinoIoTPreferredConnection(ssid, pass);
