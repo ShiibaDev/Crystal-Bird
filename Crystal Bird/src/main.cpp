@@ -7,13 +7,16 @@
 // Warning, code are corrupted.
 #include "thingProperties.h"
 #include <Arduino.h>
-// Definition of every value on the board (Leds, Analogs, etc)
-bool err;
+
+// Every important value is on thingProperties.h
 
 const int safe = 10;
 const int warning = 11;
 const int danger = 12;
 const int LightOn = 13;
+
+// Analogs
+
 // Functions (Every function made, is below this.)
 
 void setup() {
@@ -31,6 +34,7 @@ void setup() {
  The default is 0 (only errors).
  Maximum is 4
 */
+  
   Serial.println("**////////////////**");
   setDebugMessageLevel(2);
   ArduinoCloud.printDebugInfo();
@@ -40,7 +44,22 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  Connect();
+}
+
+void Connect() {
+  pinMode(warning, OUTPUT);
   ArduinoCloud.update();
+  while (ArduinoCloud.connected() == 0) {
+    Serial.println("Waiting Connection, sorry :(");
+    digitalWrite(warning, HIGH);
+    delay (1000);
+    digitalWrite(warning, LOW);
+    if (ArduinoCloud.connected() == 1) {
+      break;
+      digitalWrite(warning, LOW);
+    }
+  }
 }
 
 void Initialize() {
@@ -70,8 +89,12 @@ void Restart() {
 }
 
 void errMessage() {
-  setDebugMessageLevel(0); // Just print the error
+  setDebugMessageLevel(1);
   ArduinoCloud.printDebugInfo();
 }
 
+void lightTurnOnOff() {
+  Serial.print("Light status");
+  Serial.println(roomLight);
+}
 // Este codigo esta en ingles, para que personas de todo el mundo puedan utilizarlo y configurarlo a su favor.
