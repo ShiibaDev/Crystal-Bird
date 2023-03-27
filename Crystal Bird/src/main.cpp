@@ -7,8 +7,8 @@
 // Warning, code are corrupted.
 #include "thingProperties.h"
 #include <Arduino.h>
-// Definition of every value on the board (Leds, Analogs, etc)
-bool err;
+
+// Every important value is on thingProperties.h
 
 const int safe = 10;
 const int warning = 11;
@@ -89,13 +89,12 @@ void Restart() {
 }
 
 void errMessage() {
-  setDebugMessageLevel(0); // Just print the error
+  setDebugMessageLevel(1);
   ArduinoCloud.printDebugInfo();
 }
 
 void lightTurnOnOff() {
   Serial.print("Light status");
-  Serial.println(LightSource);
+  Serial.println(roomLight);
 }
-
 // Este codigo esta en ingles, para que personas de todo el mundo puedan utilizarlo y configurarlo a su favor.
