@@ -12,4 +12,4 @@ This board is made for a domestic enviroment, industrial enviroments or outsider
 
 ### Step-by-step installation
 
-You can use the installation kit (On process) to make it more user-friendly or use the CLI to start working on.
+Follow the instructions, and connect the device to your phone :)
