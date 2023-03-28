@@ -36,8 +36,7 @@ void setup() {
 */
   
   Serial.println("**////////////////**");
-  setDebugMessageLevel(2);
-  ArduinoCloud.printDebugInfo();
+  errMessage();
   Serial.println("**////////////////**");
   pinMode(LightOn, led);
 }
@@ -89,7 +88,7 @@ void Restart() {
 }
 
 void errMessage() {
-  setDebugMessageLevel(1);
+  setDebugMessageLevel(0);
   ArduinoCloud.printDebugInfo();
 }
 
