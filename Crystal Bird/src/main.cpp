@@ -88,7 +88,7 @@ void Restart() {
 }
 
 void errMessage() {
-  setDebugMessageLevel(1);
+  setDebugMessageLevel(0);
   ArduinoCloud.printDebugInfo();
 }
 
