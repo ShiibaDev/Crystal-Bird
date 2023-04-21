@@ -1,99 +1,70 @@
-// Some code fragments have been taken from an old repository: https://github.com/ShiibaDev/Fair-Sciencie/blob/master/src/main.cpp
-// They are being optimized and configured for a complex operation.
+/*
+  Variables which are marked as READ/WRITE in the Cloud Thing will also have functions
+  which are called when their values are changed from the Dashboard.1
+  These functions are generated with the Thing and added at the end of this sketch.
+*/
 
-
-// this is the only and last project of IoT I am gonna work, the next projects gonna focus only web development. (ShibaDev)
-
-// Warning, code are corrupted.
 #include "thingProperties.h"
-#include <Arduino.h>
 
-// Every important value is on thingProperties.h
-
-const int safe = 10;
-const int warning = 11;
-const int danger = 12;
-const int LightOn = 13;
-
-// Analogs
-
-// Functions (Every function made, is below this.)
+const int safe = 7;
+const int warning = 0;
+const int danger = 6;
+const int LightOn = 1;
 
 void setup() {
+  pinMode(safe, OUTPUT);
+  pinMode(warning, OUTPUT);
+  pinMode(danger, OUTPUT);
+  // Initialize serial and wait for port to open:
   Serial.begin(9600);
-  delay(1250);
+  // This delay gives the chance to wait for a Serial Monitor without blocking if none is found
+  delay(1500); 
+
+  // Defined in thingProperties.h
   initProperties();
 
   // Connect to Arduino IoT Cloud
   ArduinoCloud.begin(ArduinoIoTPreferredConnection);
-
-  /*
- The following function allows you to obtain more information
- related to the state of network and IoT Cloud connection and errors
- the higher number the more granular information you’ll get.
- The default is 0 (only errors).
- Maximum is 4
-*/
   
-  Serial.println("**////////////////**");
-  errMessage();
-  Serial.println("**////////////////**");
-  pinMode(LightOn, led);
+/*
+     The following function allows you to obtain more information
+     related to the state of network and IoT Cloud connection and errors
+     the higher number the more granular information you’ll get.
+     The default is 0 (only errors).
+     Maximum is 4
+ */
+  setDebugMessageLevel(2);
+  ArduinoCloud.printDebugInfo();
+  pinMode(LightOn, OUTPUT);
+  
+  if (WiFi.status() == 0) {
+    digitalWrite(safe, HIGH);
+  } else {
+    digitalWrite(warning, HIGH);
+  }
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  Connect();
-}
-
-void Connect() {
-  pinMode(warning, OUTPUT);
   ArduinoCloud.update();
-  while (ArduinoCloud.connected() == 0) {
-    Serial.println("Waiting Connection, sorry :(");
-    digitalWrite(warning, HIGH);
-    delay (1000);
-    digitalWrite(warning, LOW);
-    if (ArduinoCloud.connected() == 1) {
-      break;
-      digitalWrite(warning, LOW);
-    }
-  }
+  digitalWrite(LightOn, led);
+  digitalWrite(warning, noInternetExample);
 }
 
-void Initialize() {
-  Serial.print("Board Status");
+/*
+  Since Led is READ_WRITE variable, onLedChange() is
+  executed every time a new value is received from IoT Cloud.
+*/
+void onLedChange()  {
+  Serial.print("Led status changed:");
   Serial.println(led);
-
-  if (led == 0) {
-    // Insert code to turn offline the board.
-    Serial.print("Board offline");
-  }
 }
 
-void Restart() {
-  // A fatal error occurred and we don't want to destroy the house with a explosion, so we get out of control, turning every 1 into 0, like a general shutdown.
-  pinMode(danger, OUTPUT);
-
-  bool err; err = true;
-
-  while(err == true) {
-    digitalWrite(danger, HIGH);
-    delay(755);
-    digitalWrite(danger, LOW);
-  }
-  // Below here, program the board to get out of the connection.
-  errMessage();
-  Serial.println(" <- This the error message.");
+/*
+  Since NoInternetExample is READ_WRITE variable, onNoInternetExampleChange() is
+  executed every time a new value is received from IoT Cloud.
+*/
+void onNoInternetExampleChange()  {
+  // Add your code here to act upon NoInternetExample change
+  Serial.print("Example of no internet:");
+  Serial.println(noInternetExample);
 }
-
-void errMessage() {
-  setDebugMessageLevel(0);
-  ArduinoCloud.printDebugInfo();
-}
-
-void lightTurnOnOff() {
-  Serial.print("Light status");
-  Serial.println(roomLight);
-}
-// Este codigo esta en ingles, para que personas de todo el mundo puedan utilizarlo y configurarlo a su favor.
